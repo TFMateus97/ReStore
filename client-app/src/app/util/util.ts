@@ -4,3 +4,7 @@ export function getCookie(key: string) {
     );
     return cookie ? cookie.pop() : "";
 }
+
+export function currencyFormat(amount: number) {
+    return "$" + (amount / 100).toFixed(2);
+}
