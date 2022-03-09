@@ -31,9 +31,9 @@ function App() {
         if (buyerId) {
             agent.Basket.getBasket()
                 .then((basket) => setBasket(basket))
-                .catch((error) => console.log(error))
-                .finally(() => setLoading(false));
+                .catch((error) => console.log(error));
         }
+        setLoading(false);
     }, [setBasket]); //o terminal pode dizer qual dependencia está faltando
 
     const [darkMode, setDarkMode] = useState(false);
