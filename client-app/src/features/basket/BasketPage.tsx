@@ -12,13 +12,16 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import agent from "../../app/api/agent";
 import { useStoreContext } from "../../app/context/StoreContext";
+import LoadingComponent from "../../app/layout/LoadingComponent";
+import { currencyFormat } from "../../app/util/util";
 import BasketSummary from "./BasketSummary";
 
 export default function BasketPage() {
     const { basket, removeItem, setBasket } = useStoreContext();
+    const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState({
         loading: false,
         name: "",
@@ -43,6 +46,12 @@ export default function BasketPage() {
             .catch((error) => console.log(error))
             .finally(() => setStatus({ loading: false, name: "" }));
     }
+
+    useEffect(() => {
+        setLoading(!!!basket);
+    }, [basket]);
+
+    if (loading) return <LoadingComponent></LoadingComponent>;
 
     if (!basket)
         return <Typography variant="h3">Your basket is empty</Typography>;
@@ -84,7 +93,7 @@ export default function BasketPage() {
                                     </Box>
                                 </TableCell>
                                 <TableCell align="right">
-                                    currencyFormat(item.price)
+                                    {currencyFormat(item.price)}
                                 </TableCell>
                                 <TableCell align="right">
                                     <LoadingButton
@@ -134,13 +143,13 @@ export default function BasketPage() {
                                         loading={
                                             status.loading &&
                                             status.name ===
-                                                "rem" + item.productId
+                                                "del" + item.productId
                                         }
                                         onClick={() =>
                                             handleRemoveItem(
                                                 item.productId,
                                                 item.quantity,
-                                                "rem" + item.productId
+                                                "del" + item.productId
                                             )
                                         }
                                         color="error"
