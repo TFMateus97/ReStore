@@ -79,7 +79,7 @@ namespace API.Controllers
                 return NotFound();
 
             basket.RemoveItem(productId, quantity);
-            var result = await _context.SaveChangesAsync() > 1;
+            var result = await _context.SaveChangesAsync() > 0;
             if (result)
                 return Ok();
 
