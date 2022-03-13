@@ -36,7 +36,7 @@ function App() {
                 .catch((error) => console.log(error));
         }
         setLoading(false);
-    }, [setBasket]); //o terminal pode dizer qual dependencia está faltando
+    }, [dispatch]); //o terminal pode dizer qual dependencia está faltando
 
     const [darkMode, setDarkMode] = useState(false);
     const palleteType = darkMode ? "dark" : "light";
