@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
 import { useAppSelector } from "../../features/contact/counterSlice";
-import { useStoreContext } from "../context/StoreContext";
 
 interface Props {
     darkMode: boolean;

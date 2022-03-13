@@ -113,7 +113,7 @@ export default function ProductDetails() {
                     </Grid>
                     <Grid item xs={6}>
                         <LoadingButton loading={submitting}
-                            disabled={item?.quantity === quantity || !item && quantity === 0} 
+                            disabled={(item?.quantity === quantity) || (!item && quantity === 0)} 
                             onClick={handleUpdateCart} 
                             sx={{height: '55px'}} 
                             color='primary' 
@@ -128,7 +128,3 @@ export default function ProductDetails() {
         </Grid>
     );
 }
-function dispatch(arg0: any): any {
-    throw new Error("Function not implemented.");
-}
-
