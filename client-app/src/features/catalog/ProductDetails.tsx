@@ -19,23 +19,21 @@ import { Product } from "../../app/models/product";
 import { currencyFormat } from "../../app/util/util";
 import { addBasketItemAsync, removeBasketItemAsync, setBasket } from "../basket/basketSlice";
 import { useAppDispatch, useAppSelector } from "../contact/counterSlice";
+import { fetchProductAsync, productSelectors } from "./catalogSlice";
 
 export default function ProductDetails() {
     const { basket, status} = useAppSelector(state => state.basket);
     const dispatch = useAppDispatch();
     const { id } = useParams<{ id: string }>();
-    const [product, setProduct] = useState<Product | null>(null);
-    const [loading, setLoading] = useState(true);
+    const product = useAppSelector(state => productSelectors.selectById(state, id));
     const [quantity, setQuantity] = useState<number>(0);
     const item = basket?.items.find(i => i.productId === product?.id);
+    const {status: productStatus} = useAppSelector(state => state.catalog);
 
     useEffect(() => {
         if (item) setQuantity(item.quantity);
-        agent.Catalog.details(parseInt(id))
-            .then((product) => setProduct(product))
-            .catch((error) => console.log(error))
-            .finally(() => setLoading(false));
-    }, [id, item]); //será chamado quando o componente montar, ou o valor da dependencia mudar
+        if (!product) dispatch(fetchProductAsync(parseInt(id)));
+    }, [id, item, dispatch, product]); //será chamado quando o componente montar, ou o valor da dependencia mudar
 
     function handleInputChange(event: any) {
         if(event.target.value >= 0)
@@ -52,7 +50,7 @@ export default function ProductDetails() {
         }
     }
 
-    if (loading) return <LoadingComponent></LoadingComponent>;
+    if (productStatus.includes('pending')) return <LoadingComponent></LoadingComponent>;
 
     if (!product) return <NotFound />;
 

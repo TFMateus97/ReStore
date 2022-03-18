@@ -9,4 +9,4 @@ export const store = configureStore({
         basket: basketSlice.reducer,
         catalog: catalogSlice.reducer
     }
-})
+})  
