@@ -7,11 +7,11 @@ import ProductList from "./ProductList";
 export default function Catalog() {
     const products = useAppSelector(productSelectors.selectAll);
     const dispatch = useAppDispatch();
-    const { productsLoaded } = useAppSelector(state => state.catalog);
+    const { productsLoaded, status } = useAppSelector(state => state.catalog);
 
     useEffect(() => {
         if(!productsLoaded) dispatch(fetchProductsAsync());
-    }, [productsLoaded]); 
+    }, [productsLoaded, dispatch]); 
     //Se nao usar a dependencia, esse método irá executar toda a vez que o componente renderizar
     //[] -  significa que será chamado apenas quando o componente montar (mount)
 
