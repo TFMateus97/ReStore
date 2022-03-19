@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using API.Extensions;
+using API.RequestHelpers;
+using System.Text.Json;
 
 namespace API.Controllers
 {
@@ -18,15 +20,19 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> Get(string orderBy, string searchTerm, string brands, string types)
+        public async Task<ActionResult<PagedList<Product>>> Get([FromQuery] ProductParams filter)
         {
             var query = _context.Products
-                        .Sort(orderBy)
-                        .Search(searchTerm)
-                        .Filter(types, brands)
+                        .Sort(filter.OrderBy)
+                        .Search(filter.SearchTerm)
+                        .Filter(filter.Types, filter.Brands)
                         .AsQueryable();
 
-            return await query.ToListAsync();
+            var products = await PagedList<Product>.ToPagedList(query, filter.PageNumber, filter.PageSize);
+
+            Response.Headers.Add("Pagination", JsonSerializer.Serialize(products.MetaData));
+
+            return products;
         }
 
         [HttpGet("{id}")]
