@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, TextField } from "@mui/material";
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Pagination, Paper, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import  { useEffect } from "react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../contact/counterSlice";
@@ -66,6 +66,14 @@ export default function Catalog() {
                 <Grid item xs={9}>
                     <ProductList products={products}></ProductList>
                 </Grid>
+                <Grid item xs={3}></Grid>
+                <Box display='flex' justifyContent='space-between' alignItems='center'>
+                    <Typography>
+                        Displaying 1-6 out of 20 items
+                    </Typography>
+                    <Pagination color='secondary' size='large' count={2} page={1}></Pagination>
+                </Box>
+                <Grid item xs={9}></Grid>
             </Grid>
     );
 }
