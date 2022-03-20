@@ -9,3 +9,12 @@ export interface Product {
     quantityInStock: number;
 }
 //json2ts.com
+
+export interface ProductParams {
+    orderBy: string;
+    searchTerm?: string;
+    types?: string[];
+    brands?: string[];
+    pageNumber: number;
+    pageSize: number;
+}
