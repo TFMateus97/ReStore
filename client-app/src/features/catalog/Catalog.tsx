@@ -1,9 +1,12 @@
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, Pagination, Paper, Radio, RadioGroup, TextField, Typography } from "@mui/material";
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, Pagination, Paper, Radio, RadioGroup, Typography } from "@mui/material";
 import  { useEffect } from "react";
+import CheckBoxGroup from "../../app/components/CheckBoxGroup";
+import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../contact/counterSlice";
-import { fetchFilters, fetchProductsAsync, productSelectors } from "./catalogSlice";
+import { fetchFilters, fetchProductsAsync, productSelectors, setProductParams } from "./catalogSlice";
 import ProductList from "./ProductList";
+import ProductSearch from "./productSearch";
 
 const sortOptions = [
     {value: 'name', label: 'Alphabetical'},
@@ -14,7 +17,7 @@ const sortOptions = [
 export default function Catalog() {
     const products = useAppSelector(productSelectors.selectAll);
     const dispatch = useAppDispatch();
-    const { productsLoaded, status, filtersLoaded, brands, types } = useAppSelector(state => state.catalog);
+    const { productsLoaded, status, filtersLoaded, brands, types, productParams } = useAppSelector(state => state.catalog);
 
     useEffect(() => {
         if(!productsLoaded) dispatch(fetchProductsAsync());
@@ -33,34 +36,27 @@ export default function Catalog() {
             <Grid container spacing={4}>
                 <Grid item xs={3}>
                     <Paper sx={{mb: 2}}>
-                        <TextField
-                            label='Search products'
-                            variant='outlined'
-                            fullWidth
-                        ></TextField>
+                       <ProductSearch></ProductSearch>
                         <Paper sx={{mb: 2, p: 2}}>
-                            <FormControl component='fieldset'>
-                                <RadioGroup>
-                                    {sortOptions.map(({value, label}) => (
-                                        <FormControlLabel key={value} value={value} control={<Radio />} label={label} />
-                                    ))}
-                                </RadioGroup>
-                            </FormControl>
+                            <RadioButtonGroup 
+                                options={ sortOptions } 
+                                selectedValue={ productParams.orderBy }
+                                onChange={ (e) => dispatch(setProductParams({orderBy: e.target.value})) } />
                         </Paper>
                     </Paper>
                     <Paper sx={{mb: 2, p: 2}}>
-                        <FormGroup>
-                            {brands.map((brand) => (
-                                <FormControlLabel control={<Checkbox />} label={brand} key={brand} />
-                            ))}
-                        </FormGroup>
+                        <CheckBoxGroup 
+                            items={ brands } 
+                            onChange={ (items: string[]) => dispatch(setProductParams({brands: items})) } 
+                            checkedValues={productParams.brands} 
+                        />
                     </Paper>
                     <Paper sx={{mb: 2, p: 2}}>
-                        <FormGroup>
-                            {types.map((type) => (
-                                <FormControlLabel control={<Checkbox />} label={type} key={type} />
-                            ))}
-                        </FormGroup>
+                        <CheckBoxGroup 
+                            items={types} 
+                            onChange={ (items: string[]) => dispatch(setProductParams({types: items})) } 
+                            checkedValues={ productParams.types } 
+                        />
                     </Paper>
                 </Grid>
                 <Grid item xs={9}>
