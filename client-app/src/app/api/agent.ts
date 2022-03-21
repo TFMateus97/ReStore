@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
+import { PaginatedReponse } from "../models/pagination";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -12,6 +13,11 @@ const responseBody = (response: AxiosResponse) => response.data;
 axios.interceptors.response.use(
     async (response) => {
         await sleep();
+        const pagination = response.headers['pagination'];//precisa ser minusculo, mesmo se no browser estiver maiusculo
+        if(pagination){
+            response.data = new PaginatedReponse(response.data, JSON.parse(pagination))
+            return response;
+        }
         return response;
     },
     (error: AxiosError) => {
