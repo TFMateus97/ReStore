@@ -1,12 +1,13 @@
-import { Box, Grid, Pagination, Paper, Typography } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import  { useEffect } from "react";
 import CheckBoxGroup from "../../app/components/CheckBoxGroup";
+import AppPagination from "../../app/components/AppPagination";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../contact/counterSlice";
 import { fetchFilters, fetchProductsAsync, productSelectors, setProductParams } from "./catalogSlice";
 import ProductList from "./ProductList";
-import ProductSearch from "./productSearch";
+import ProductSearch from "./ProductSearch";
 
 const sortOptions = [
     {value: 'name', label: 'Alphabetical'},
@@ -17,7 +18,7 @@ const sortOptions = [
 export default function Catalog() {
     const products = useAppSelector(productSelectors.selectAll);
     const dispatch = useAppDispatch();
-    const { productsLoaded, status, filtersLoaded, brands, types, productParams } = useAppSelector(state => state.catalog);
+    const { productsLoaded, status, filtersLoaded, brands, types, productParams, metaData } = useAppSelector(state => state.catalog);
 
     useEffect(() => {
         if(!productsLoaded) dispatch(fetchProductsAsync());
@@ -30,7 +31,7 @@ export default function Catalog() {
     }, [filtersLoaded]); //segundo useEffect pois a caso as flags mudassem, iria potencialmente fazer uma requisição desnecessaria
 
 
-    if (status.includes('pending')) return <LoadingComponent></LoadingComponent>;
+    if (status.includes('pending') || !metaData) return <LoadingComponent></LoadingComponent>;
 
     return (
             <Grid container spacing={4}>
@@ -63,12 +64,7 @@ export default function Catalog() {
                     <ProductList products={products}></ProductList>
                 </Grid>
                 <Grid item xs={3}></Grid>
-                <Box display='flex' justifyContent='space-between' alignItems='center'>
-                    <Typography>
-                        Displaying 1-6 out of 20 items
-                    </Typography>
-                    <Pagination color='secondary' size='large' count={2} page={1}></Pagination>
-                </Box>
+                    <AppPagination metaData={metaData} onPageChange={(page: number) => dispatch(setProductParams({pageNumber: page}))}></AppPagination>
                 <Grid item xs={9}></Grid>
             </Grid>
     );

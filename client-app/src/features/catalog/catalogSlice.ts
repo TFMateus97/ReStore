@@ -64,7 +64,7 @@ export const fetchFilters = createAsyncThunk(
     async (_, thunkAPI) => {
         try {
             return await agent.Catalog.fetchFilters();
-        } catch (error) {
+        } catch (error: any) {
             return thunkAPI.rejectWithValue({error: error.data});
         }
     } 
