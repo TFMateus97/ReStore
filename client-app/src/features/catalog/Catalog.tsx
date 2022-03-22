@@ -31,7 +31,7 @@ export default function Catalog() {
     }, [filtersLoaded]); //segundo useEffect pois a caso as flags mudassem, iria potencialmente fazer uma requisição desnecessaria
 
 
-    if (status.includes('pending') || !metaData) return <LoadingComponent></LoadingComponent>;
+     if (!filtersLoaded) return <LoadingComponent></LoadingComponent>;
 
     return (
             <Grid container columnSpacing={4}>
@@ -65,7 +65,9 @@ export default function Catalog() {
                 </Grid>
                 <Grid item xs={3}></Grid>
                 <Grid item xs={9} sx={{mb: 2}}>
+                    { metaData && 
                     <AppPagination metaData={metaData} onPageChange={(page: number) => dispatch(setPageNumber({pageNumber: page}))}></AppPagination>
+                }
                 </Grid>
             </Grid>
         );
