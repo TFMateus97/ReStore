@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Middleware;
 using API.Entities;
 using Microsoft.AspNetCore.Identity;
+using API.Services;
 
 namespace API
 {
@@ -51,6 +52,7 @@ namespace API
                 .AddEntityFrameworkStores<StoreContext>();
             services.AddAuthentication();
             services.AddAuthorization();
+            services.AddScoped<TokenServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
