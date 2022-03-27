@@ -10,12 +10,24 @@ import { Link, useHistory } from 'react-router-dom';
 import {  useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import agent from '../../app/api/agent';
-import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function Register() {
-    // const history = useHistory();
-    const [validationErrors, setValidationErrors] = useState([]);
-    const {register, handleSubmit, formState: {isSubmitting, errors, isValid}} = useForm();
+    const history = useHistory();
+    const {register, handleSubmit,setError, formState: {isSubmitting, errors, isValid}} = useForm();
+    function handleApiErrors(errors: any){
+        if(errors){
+            errors.forEach((error: string) => {
+                if(error.includes('Password')){
+                    setError('password', {message: error});
+                } else if(error.includes('Email')){
+                    setError('email', {message: error});
+                } else if(error.includes('Username')) {
+                    setError('username', {message: error});
+                }
+            });
+        }
+    }
 
   return (
       <Container component={Paper} maxWidth="sm" sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', p: 4}} >
@@ -27,7 +39,12 @@ export default function Register() {
           </Typography>
           <Box component="form" 
             onSubmit={handleSubmit((data) => 
-                agent.Account.register(data).catch(error => setValidationErrors(error)))
+                agent.Account.register(data)
+                .then(() => {
+                  toast.success('registration successful');
+                  history.push('/login');
+                })
+                .catch(error => handleApiErrors(error)))
             } 
             noValidate 
             sx={{ mt: 1 }}>
@@ -36,14 +53,22 @@ export default function Register() {
               fullWidth
               label="Username"
               autoFocus
-              {...register('username', {required: 'Username is required' })}
+              {...register('username', {
+                  required: 'Username is required'
+                })}
               error={!!errors.username}
               helperText={errors?.username?.message} />
             <TextField
               margin="normal"
               fullWidth
               label="Email address"
-              {...register('email', {required: 'Email is required' })}
+              {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                      value: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,
+                      message: 'Email not valid'
+                  }
+                })}
               error={!!errors.email}
               helperText={errors?.email?.message} />
             <TextField
@@ -52,21 +77,15 @@ export default function Register() {
               label="Password"
               type="password"
               id="password"
-              {...register('password', {required: 'Password is required' })}
+              {...register('password', {
+                  required: 'Password is required',
+                  pattern: {
+                    value: /(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$/,
+                    message: 'Password not strong enough'
+                }                
+                })}
               error={!!errors.password}
               helperText={errors?.password?.message} />
-            {validationErrors.length > 0 && (
-                <Alert severity="error">
-                    <AlertTitle>Validation errors</AlertTitle>
-                    <List>
-                        {validationErrors.map((error) => (
-                            <ListItem key={error}>
-                                <ListItemText>{error}</ListItemText>
-                            </ListItem>
-                        ))}
-                    </List>
-                </Alert>
-            )}
             <LoadingButton
               loading={isSubmitting}
               type="submit"
