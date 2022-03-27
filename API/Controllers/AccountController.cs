@@ -51,7 +51,7 @@ namespace API.Controllers
             {
                 Email = user.Email,
                 Token = await _tokenServices.GenerateToken(user),
-                Basket = anonymousBasket != null ? anonymousBasket.MapBasketToDto() : userBasket.MapBasketToDto()
+                Basket = anonymousBasket != null ? anonymousBasket.MapBasketToDto() : userBasket?.MapBasketToDto()
             };
         }
 
@@ -87,10 +87,13 @@ namespace API.Controllers
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
+            var userBasket = await RetrieveBasket(User.Identity.Name);
+
             return new UserDto
             {
                 Email = user.Email,
-                Token = await _tokenServices.GenerateToken(user)
+                Token = await _tokenServices.GenerateToken(user),
+                Basket = userBasket?.MapBasketToDto()
             };
         }
 

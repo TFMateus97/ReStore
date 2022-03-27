@@ -121,7 +121,7 @@ export default function BasketPage() {
                 <Grid item xs={6}></Grid>
                 <Grid item xs={6}>
                     <BasketSummary></BasketSummary>
-                    <Button component={Link} to='/checkout' variant='contained' size='large' fullWidth></Button>
+                    <Button component={Link} to='/checkout' variant='contained' size='large' fullWidth>Checkout</Button>
                 </Grid>
             </Grid>
         </>
