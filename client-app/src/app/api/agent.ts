@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
+import { store } from "../../features/store/configureStore";
 import { PaginatedReponse } from "../models/pagination";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
@@ -9,6 +10,13 @@ axios.defaults.baseURL = "http://localhost:5000/api/";
 axios.defaults.withCredentials = true; //permitir que navegador receba e preencha o cookie
 
 const responseBody = (response: AxiosResponse) => response.data;
+
+axios.interceptors.request.use(config => {
+    const token = store.getState().account.user?.token;
+    if(token) config.headers!.Authorization = `Bearer ${token}`
+
+    return config;
+})
 
 axios.interceptors.response.use(
     async (response) => {
