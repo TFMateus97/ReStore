@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Alert, AlertTitle, List, ListItem, ListItemText, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import { Link, useHistory } from 'react-router-dom';
 import {  useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 
 export default function Register() {
     const history = useHistory();
-    const {register, handleSubmit,setError, formState: {isSubmitting, errors, isValid}} = useForm();
+    const {register, handleSubmit,setError, formState: {isSubmitting, errors}} = useForm();
     function handleApiErrors(errors: any){
         if(errors){
             errors.forEach((error: string) => {

@@ -16,7 +16,7 @@ export default function Login() {
     const history = useHistory();
     const dispatch = useAppDispatch();
     const location = useLocation<any>();
-    const {register, handleSubmit, formState: {isSubmitting, errors, isValid}} = useForm();
+    const {register, handleSubmit, formState: {isSubmitting, errors}} = useForm();
 
     async function submitForm(data: FieldValues) {
       try {

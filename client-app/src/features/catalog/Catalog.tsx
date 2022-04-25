@@ -28,7 +28,7 @@ export default function Catalog() {
 
     useEffect(() => {
         if(!filtersLoaded) dispatch(fetchFilters());
-    }, [filtersLoaded]); //segundo useEffect pois a caso as flags mudassem, iria potencialmente fazer uma requisição desnecessaria
+    }, [filtersLoaded, dispatch]); //segundo useEffect pois a caso as flags mudassem, iria potencialmente fazer uma requisição desnecessaria
 
 
      if (!filtersLoaded) return <LoadingComponent></LoadingComponent>;
